@@ -1,0 +1,27 @@
+# More examples of Codefresh YAML can be found at
+# https://codefresh.io/docs/docs/yaml-examples/examples/
+
+version: '1.0'
+# Stages can help you organize your steps in stages
+stages:
+  - clone
+  - base
+
+steps:
+  clone:
+    title: 'Cloning repository'
+    type: 'git-clone'
+    repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
+    revision: '${{CF_BRANCH}}'
+    git: 'github-motorefi'
+    stage: 'clone'
+
+  build:
+    title: Building then pushing iac-runner-base
+    type: build
+    stage: base
+    working_directory: '${{clone}}'
+    dockerfile: Dockerfile
+    registry: ${{MR_REGISTRY_CF_NAME}}
+    image_name: iac-runner-base
+    tag: '${{CF_REVISION}}'
